@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/e56573dca1.js" crossorigin="anonymous"></script>
+
+        <link rel="shortcut icon" href="/sfsete/assets/favicon.png" type="image/png" />
+        <link href="/sfsete/views/_css/main.css" rel="stylesheet">
+        <link href="/sfsete/views/_css/teacher.css" rel="stylesheet">
+        <link href="/sfsete/views/_css/header.css" rel="stylesheet">
+        <link href="/sfsete/views/_css/footer.css" rel="stylesheet">
+        <title>SF7 | Docentes</title>
+    </head>
+    <body>
+        <header class="headerContainer">
+            <div class="headerContent">
+                <img src="/sfsete/assets/img/SF7_LOGOTIPO.png" alt="SF7 Logotipo" />
+
+                <h1>
+                    Docentes
+                </h1>
+
+                <nav>
+                    <!-- <a href="#" class="btn-filter">
+                        <i class="fa-solid fa-filter"></i>
+                    </a> -->
+                    <a href="#" class="btn-add" id="btnAddTeacher">
+                        <i class="fa-solid fa-circle-plus"></i> Docente
+                    </a>
+                    <!-- <div class="inputSearch">
+                        <div class="searchIcon">
+                            <figure>
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </figure>
+                        </div>
+                        <input
+                            type="text"
+                            name="search"
+                            id="searchList"
+                            class="active"
+                            placeholder='Buscar Docente'
+                            onchange="handleFilterTeacherList(this)"
+                        />
+                    </div> -->
+                </nav>
+            </div>
+        </header>
+
+
+        <main class="mainContainer">
+
+            <section class="mainContent">
+
+                <div id="loading-teacher-grid" class="full-page">
+                    <div class="content-page">
+                        <strong>
+                            <span> <i class="fa fa-sync fa-spin"></i> Carregando...</span>
+                        </strong>
+                    </div>
+                </div>
+
+                <div id="without-data" class="full-page hidden-element">
+                    <div class="content-page">
+                        <strong>
+                            <span>Sem dados para exibir</span> <!-- <a href="#" id="filter_table_teachers">aqui</a>.  -->
+                        </strong>
+                    </div>
+                </div>
+                  
+
+                <div id="grid-container" class="hidden-element">
+
+                    <table>
+                        <thead class="grid-head">
+                            <tr class="row-heade">
+                                <th class="item-head" headerName="name">Nome</th>
+                                <th class="item-head" headerName="birth_date_br">Data de nascimento</th>
+                                <th class="item-head" headerName="rg_number">RG</th>
+                                <th class="item-head" headerName="cpf_number">CPF</th>
+                                <th class="item-head" headerName="email_address">E-MAIL</th>
+                                <th class="item-head" headerName="phone">Telefone</th>
+                                <th class="item-head" headerName="gender">Gênero</th>
+                                <th class="item-head" headerName="address">Endereço</th>
+                                <th class="item-head" headerName="address_number">Número</th>
+                                <th class="item-head" headerName="address_district">Bairro</th>
+                                <th class="item-head" headerName="address_city">Cidade</th>
+                                <th class="item-head" headerName="address_state">Estado</th>
+                                <th class="item-head" headerName="address_cep">CEP</th>
+                                <th class="item-head" headerName="address_city_origin">Cidade de nascimento</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="grid-body"> </tbody>
+                    </table>
+                    
+                </div>
+            </section>
+
+
+            <!-- The Modal -->
+            <div id="modalAddTeacher" class="modal">
+
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <form method="post" id="form_data_teacher" action="" enctype="multipart/form-data">
+
+                        <input type="hidden" name="action" id="form_action" value="add">
+                        <input type="hidden" name="ref" id="form_ref" value="">
+
+                        <div class="modal-header">
+                            <h2>
+                                <i class="fa-solid fa-chalkboard-user"></i>
+                                Cadastrar docente
+                            </h2>
+
+                            <div class="nav">
+                                <ul class="nav-tabs">
+                                    <li class="active">
+                                        <a href="#" id="link-tabs-box-1"> <i class="fa-solid fa-user"></i> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" id="link-tabs-box-2"> <i class="fa-solid fa-location-dot"></i> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" id="link-tabs-box-3"> <i class="fa-solid fa-scroll"></i> </a>
+                                    </li>
+                                </ul>
+
+                                <span class="close-modal-add-teacher">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="modal-body">
+
+                            <div id="tabs-box-1" class="tab-pane personal-data">
+                                <div class="form-container">
+                                    <fieldset>
+
+                                        <legend>Dados Pessoais</legend>
+
+                                        <div class="form-group col-lg">
+                                            <label for="teacher_name" class="required">Nome completo</label>
+                                            <input type="text" name="full_name" id="teacher_name" oninput="handleValidateFormInput(this)" isValid="false">
+                                            <span class="display-errors"></span>
+                                        </div>
+
+                                        <div class="form-group col-md">
+                                            <label for="birth_date" class="required">Data de nascimento</label>
+                                            <input type="date" name="birth_date" id="birth_date" 
+                                                onkeypress="handleValidateFormInput(this)" onchange="handleValidateFormInput(this)" isValid="false">
+                                            <span class="display-errors"></span>
+                                        </div>
+
+                                        <div class="form-group col-md">
+                                            <label for="teacher_age">Idade</label>
+                                            <input type="text" name="age" id="teacher_age" disabled>
+                                        </div>
+                                        
+                                        <div class="form-group col-md">
+                                            <label for="rg_number" class="required">RG</label>
+                                            <input type="text" name="number_rg" id="rg_number" oninput="handleValidateFormInput(this)" isValid="false">
+                                            <span class="display-errors"></span>
+                                        </div>
+
+                                        <div class="form-group col-md">
+                                            <label for="number_cpf" class="required">CPF</label>
+                                            <input type="text" name="number_cpf" id="number_cpf" oninput="handleValidateFormInput(this)" isValid="false">
+                                            <span class="display-errors"></span>
+                                        </div>
+
+                                        <div class="form-group col-lg">
+                                            <label for="email_address" class="required">E-mail</label>
+                                            <input type="text" name="email_address" id="email_address" oninput="handleValidateFormInput(this)" isValid="false">
+                                            <span class="display-errors"></span>
+                                        </div>
+
+                                        <div class="form-group col-md">
+                                            <label for="phone_number" class="required">Celular</label>
+                                            <input placeholder="(XX) XXXXX-XXXX" type="text" name="phone_number" id="phone_number" oninput="handleValidateFormInput(this)" isValid="false">
+                                            <span class="display-errors"></span>
+                                        </div>
+
+                                        <div class="form-group col-md">
+                                            <p class="required">Gênero</p>
+
+                                            <div class="gap-md">
+                                                <div>
+                                                    <input type="radio" name="gender" id="gender_male" value="Masculino">
+                                                    <label style="display: inline;" for="gender_male">Masculino</label>
+                                                </div>
+                                                <div>
+                                                    <input type="radio" name="gender" id="gender_female" value="Feminino">
+                                                    <label style="display: inline;" for="gender_female">Feminino</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </fieldset>
+                                </div>
+                            </div>
+
+                            <div id="tabs-box-2" class="tab-pane address-data hidden-element">
+                                <div class="form-container">
+                                    <fieldset>
+                                        <legend>Endereço</legend>
+    
+                                        <div class="form-group col-md">
+                                            <label for="address_cep" class="required">CEP</label>
+                                            <input type="text" name="address_cep" id="address_cep" oninput="handleValidateFormInput(this)" isValid="false">
+                                            <span class="display-errors"></span>
+                                        </div>
+    
+                                        <div class="form-group col-md">
+                                            <label for="address_city_origin" class="required">Cidade de nascimento</label>
+                                            <input type="text" name="address_city_origin" id="address_city_origin" oninput="handleValidateFormInput(this)" isValid="false">
+                                            <span class="display-errors"></span>
+                                        </div>
+
+                                        <div class="form-group col-md-lg">
+                                            <label for="address" class="required">Endereço</label>
+                                            <input type="text" name="address" id="address" oninput="handleValidateFormInput(this)" isValid="false">
+                                            <span class="display-errors"></span>
+                                        </div>
+    
+                                        <div class="form-group col-sm">
+                                            <label for="address_number" class="required">Número</label>
+                                            <input type="text" name="address_number" id="address_number" oninput="handleValidateFormInput(this)" isValid="false">
+                                            <span class="display-errors"></span>
+                                        </div>
+    
+                                        <div class="form-group col-md">
+                                            <label for="address_district" class="required">Bairro</label>
+                                            <input type="text" name="address_district" id="address_district" oninput="handleValidateFormInput(this)" isValid="false">
+                                            <span class="display-errors"></span>
+                                        </div>
+    
+                                        <div class="form-group col-sm">
+                                            <label for="address_city" class="required">Cidade</label>
+                                            <input type="text" name="address_city" id="address_city" oninput="handleValidateFormInput(this)" isValid="false">
+                                            <span class="display-errors"></span>
+                                        </div>
+    
+                                        <div class="form-group col-sm">
+                                            <label for="address_state" class="required">Estado</label>
+                                            <input type="text" name="address_state" id="address_state" oninput="handleValidateFormInput(this)" isValid="false">
+                                            <span class="display-errors"></span>
+                                        </div>
+    
+                                    </fieldset>
+                                </div>
+                            </div>
+
+                            <div id="tabs-box-3" class="tab-pane qualifications-data hidden-element">
+                                <div class="form-container">
+                                    <fieldset>
+                                        <legend>Formação</legend>
+
+                                        <div class="new-qualification-container">
+                                            
+                                            <input type="hidden" name="qualification_ref[0]" id="qualification_form_ref" value="">
+
+                                            <div class="form-group col-md">
+                                                <label for="qualification_name" class="required">Curso</label>
+                                                <input type="text" name="qualification_name[0]" id="qualification_name" oninput="handleValidateFormInput(this)" isValid="false">
+                                                <span class="display-errors"></span>
+                                            </div>
+    
+                                            <div class="form-group col-md">
+                                                <label for="qualification_level" class="required">Nível</label>
+                                                <select name="qualification_level[0]" id="qualification_level" onchange="handleValidateFormInput(this)" isValid="false">
+                                                    <option selected="selected" value="">Selecione uma opção...</option>
+                                                    <option value="Curso Técnico">Curso Técnico</option>
+                                                    <option value="Ensino Superior">Ensino Superior</option>
+                                                    <option value="Pós-graduação - Especialização/MBA">Pós-graduação - Especialização/MBA</option>
+                                                    <option value="Pós-graduação - Mestrado">Pós-graduação - Mestrado</option>
+                                                    <option value="Pós-graduação - Doutorado">Pós-graduação - Doutorado</option>
+                                                </select>
+                                                <span class="display-errors"></span>
+                                            </div>
+    
+                                            <div class="form-group col-md">
+                                                <label for="qualification_institution" class="required">Insituição</label>
+                                                <input type="text" name="qualification_institution[0]" id="qualification_institution" oninput="handleValidateFormInput(this)" isValid="false">
+                                                <span class="display-errors"></span>
+                                            </div>
+    
+                                            <div class="form-group col-md">
+                                                <label for="qualification_document">Anexar certificado <strong>(PDF)</strong></label>
+                                                <div id="document_path0">
+                                                    <input type="file" name="qualification_document[0]" id="qualification_document">
+                                                </div>
+                                            </div>
+    
+                                            <div class="form-group col-md">
+                                                <label for="qualification_country" class="required">País</label>
+                                                <input type="text" name="qualification_country[0]" id="qualification_country" value="Brasil" oninput="handleValidateFormInput(this)" isValid="true">
+                                                <span class="display-errors"></span>
+                                            </div>
+    
+                                            <div class="form-group col-md">
+                                                <label for="qualification_state" class="required">Estado</label>
+                                                <input type="text" name="qualification_state[0]" id="qualification_state" oninput="handleValidateFormInput(this)" isValid="false">
+                                                <span class="display-errors"></span>
+                                            </div>
+    
+                                            <div class="form-group col-sm">
+                                                <label for="qualification_started" class="required">Início</label>
+                                                <input type="date" name="qualification_started[0]" id="qualification_started" onchange="handleValidateFormInput(this)" isValid="false">
+                                                <span class="display-errors"></span>
+                                            </div>
+    
+                                            <div class="form-group col-sm">
+                                                <label for="qualification_end" class="required">Conclusão</label>
+                                                <input type="date" name="qualification_end[0]" id="qualification_end" onchange="handleValidateFormInput(this)" isValid="false">
+                                                <span class="display-errors"></span>
+                                            </div>
+    
+                                            <div class="form-group col-md">
+                                                <p class="required">Estado atual do curso</p>
+                                                <div class="gap-md qualification-concluded-container">
+                                                    <div>
+                                                        <input type="radio" class="qualification-concluded" name="qualification_concluded[0]" id="is_concluded" value="1">
+                                                        <label style="display: inline;" for="is_concluded">Concluído</label>
+                                                    </div>
+                                                    <div>
+                                                        <input type="radio" class="qualification-concluded" name="qualification_concluded[0]" id="not_concluded" value="0">
+                                                        <label style="display: inline;" for="not_concluded">Cursando</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-group col-lg">
+                                            <a href="#" id="add_new_qualification" onclick="handlerAddNewQualification(this)">
+                                                <i class="fa-solid fa-plus"></i> Incluír nova formação
+                                            </a>
+                                        </div>
+                                        
+                                    </fieldset>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <div class="action-modal">
+                                <div id="control_action_delete" class="action-delete hidden-element">
+                                    <button type="button" class="btn btn-danger delete-data" onclick="deleteData()">
+                                        <i class="fa-solid fa-trash"></i> Excluir
+                                    </button>
+                                </div>
+
+                                <div class="container-action-add">
+                                    <button type="button" class="btn btn-secondary close-modal-add-teacher">
+                                        Fechar
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        Salvar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </main>
+
+        <footer class="footerContainer">
+            <div class="footerContent">
+                <div class="copyDescription">
+                    <small>&copy;2023, Henrique Rodrigues</small>
+                </div>
+
+                <nav>
+                    <a
+                        href="https://api.whatsapp.com/send/?phone=5511994130690&text=Olá Henrique, acabei de avaliar seu teste.&type=phone_number&app_absent=0"
+                        target="_blank"
+                        rel="noreferrer"
+                        class="whatsApp"
+                    >
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </a>
+                    <a href="https://www.instagram.com/henriquerodrigues.dev/" target="_blank" rel="noreferrer" class="instagram">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                </nav>
+            </div>
+        </footer>
+
+        <script src="/sfsete/views/_js/main.js"></script>
+        <script src="/sfsete/views/_js/teachers-view.js"></script>
+        <script src="/sfsete/controllers/teacher.js"></script>
+    </body>
+</html>

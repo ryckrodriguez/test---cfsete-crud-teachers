@@ -1,0 +1,10 @@
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  RewriteRule ^/?$ /sfsete/index.php?page=Teachers
+  RewriteRule ^dashboard/?$ /sfsete/index.php?page=Teachers
+
+  RewriteRule ^operations/teachers/?$ /sfsete/models/public.php?page=Teachers
+  RewriteRule ^data/teachers/?$ /sfsete/models/public.php?page=Teachers&action=listing
+</IfModule>

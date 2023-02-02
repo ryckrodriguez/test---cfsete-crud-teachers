@@ -1,0 +1,49 @@
+.footerContainer {
+    height: 4rem;
+    border-top: 2px solid var(--orange-500);
+}
+
+.footerContent {
+    max-width: 1460px;
+    height: 4rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--gray-900);
+}
+
+.footerContent .copyDescription {
+    padding-right: 5rem;
+}
+
+.footerContent nav .whatsApp {
+    font-size: 2rem;
+}
+
+.footerContent nav .instagram {
+    border-radius: 0.5rem;
+    font-size: 2rem;
+}
+
+.footerContent nav a + a {
+    padding-left: 1rem;
+}
+
+@media(max-width: 720px) {
+    .footerContent {
+        display: block;
+    }
+
+    .footerContent .copyDescription {
+        margin: 0 auto;
+        width: fit-content;
+        padding: 0;
+    }
+
+    .footerContent nav {
+        margin: 0 auto;
+        width: fit-content;
+    }
+}

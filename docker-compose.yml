@@ -1,0 +1,44 @@
+version: "3.3"
+
+services:
+
+  container_db:
+    container_name: mysql
+    image: mysql
+    ports:
+      - "1433:1433"
+    restart: always
+    volumes:
+      - ../database_1.0.0:/var/lib/mysql
+    networks:
+      - mysql-network
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: SFSete2023!
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks: 
+      - mysql-network
+
+  container_web:
+    container_name: web_gaussFleet
+    image: ryckrodriguez/gaussfleet_pdo_mysql
+    ports:
+      - "8888:80"
+    volumes:
+      - .:/var/www/html
+    networks: 
+      - mysql-network
+    depends_on:
+      - container_db
+
+networks: 
+  mysql-network:
+    driver: bridge

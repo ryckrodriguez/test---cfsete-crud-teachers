@@ -1,0 +1,3 @@
+messagePopup = (msg) => {
+    alert(msg)
+}

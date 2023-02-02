@@ -1,0 +1,108 @@
+.mainContainer {
+    margin: 0 0 1rem 0;
+}
+
+.mainContent {
+    margin: 1rem auto;
+    width: 67vw;
+    height: calc(100vh - (5rem + 4rem + 2.1rem)); /* Header 5rem + Footer 4rem + margin main 2.1rem */
+    border-radius: 0.5rem;
+    box-shadow: 0.5px 1px 2px 0px rgb(107 107 107 / 67%);
+    overflow-y: hidden;
+    overflow-x: auto;
+    background-color: var(--white);
+}
+
+#grid-container {
+    width: 100%;
+    height: 100%;
+}
+
+#grid-container table {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.grid-head {
+    color: var(--gray-900);
+    font-weight: 700;
+    margin-top: 0.5rem;
+}
+
+.grid-head .row-heade {
+    /* display: flex;
+    justify-content: space-between;
+    align-items: center; */
+    border-bottom: 1px solid #BDC3C7;
+    padding: 1rem 0;
+    background-color: #f5f7f7;
+}
+
+.grid-head .row-heade .item-head {
+    padding: 0.5rem 1rem;
+    white-space: nowrap;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.grid-body {
+    color: var(--gray-900);
+    font-weight: 400;
+}
+
+.grid-body .row-body {
+    /* display: flex;
+    justify-content: space-between;
+    align-items: center; */
+    border-bottom: 1px solid #BDC3C7;
+    padding: 0.5rem 0;
+    transition: filter 0.2s;
+    text-align: center;
+}
+
+.grid-body .row-body.row-focus:hover,
+.grid-body .row-body.row-focus{
+    border-bottom-color: #b7e4ff;
+    background-color: #b7e4ff;
+}
+
+.grid-body .row-body:hover {
+    background-color: #ecf0f1;
+}
+
+.grid-body .row-body .item-body.cell-focus {
+    border: 1px solid #0091EA;
+    outline: initial;
+}
+
+.grid-body .row-body .item-body {
+    padding: 0.5rem 1rem;
+    white-space: nowrap;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+#add_new_qualification:hover {
+    color: var(--blue-500);
+}
+
+.document_path_view {
+    color: var(--blue-500);
+    transition: filter 0.2s;
+}
+
+.document_path_view:hover {
+    color: var(--blue-500);
+    filter: brightness(0.8);
+}
+
+@media(max-width: 1080px) {
+}
+
+@media(max-width: 720px) {
+}
+
