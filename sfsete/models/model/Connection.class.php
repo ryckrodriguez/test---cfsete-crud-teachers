@@ -6,7 +6,7 @@
             try {
                 $server = "container_db";
                 $port = "3306";
-                $db = "DB_MD_SFSETE";
+                $db = "db_md_sfsete";
                 $user = "root";
                 $pass = "SFSete2023!";
                 $connect = new PDO("mysql:host={$server};port={$port};dbname={$db}", $user, $pass);

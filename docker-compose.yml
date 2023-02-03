@@ -5,11 +5,9 @@ services:
   container_db:
     container_name: mysql
     image: mysql
-    ports:
-      - "1433:1433"
     restart: always
     volumes:
-      - ../database_1.0.0:/var/lib/mysql
+      - ./database_1.0.0:/var/lib/mysql
     networks:
       - mysql-network
     command:

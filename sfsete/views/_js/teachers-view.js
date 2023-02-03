@@ -68,6 +68,8 @@ handleResetModal = () => {
             element.outerHTML = "";
         }
     });
+    document.getElementById("form_action").value = "add";
+    document.getElementById("form_ref").value = "";
 };
 
 handleHideModal = (modal) => {
@@ -79,11 +81,9 @@ handleShowModal = (modal) => {
 }
 
 handleFilterTeacherList = (input) => {
-    console.log(input.value)
 }
 
 handleValidateCEP = (input) => {
-    console.log(input.value);
 }
 
 handlerAddNewQualification = (anchor) => {
@@ -353,7 +353,6 @@ handleValidateFormInput = (input) => {
             case "birth_date":
             case "qualification_started[]":
             case "qualification_end[]":
-                console.log(inputValue);
                 const birthDateSplit = inputValue.split("-");
                 if(birthDateSplit == ""){
                     input.setAttribute("isValid", false);
@@ -482,7 +481,7 @@ handleValidateFormInput = (input) => {
                 }
                 break;
         }
-    } catch (error) { console.log(error); }
+    } catch (error) { }
 
 }
 

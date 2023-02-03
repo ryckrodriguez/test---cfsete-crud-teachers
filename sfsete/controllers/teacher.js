@@ -104,10 +104,11 @@ handleGetToEdit = (rowData) => {
             throw new Error(msg);
         }
 
-        document.getElementById("form_action").value = "edit";
         handleResetModal();
         handleShowModal(modalAddTeacher);
         handlerPutValuesFields(msg);
+        document.getElementById("form_ref").value = ref;
+        document.getElementById("form_action").value = "edit";
         handlerVerifyRequiredFiels();
     }).catch( error => {
         messagePopup(`Atenção: Erro ao buscar informações!`);
@@ -157,7 +158,6 @@ deleteData = () => {
                 element.innerHTML = '<i class="fa-solid fa-trash"></i> Excluir';
             }
         });
-        console.log(error);
         messagePopup(`Atenção: Erro ao excluir docente!`);
     });
 

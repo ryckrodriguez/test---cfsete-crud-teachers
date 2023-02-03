@@ -24,10 +24,7 @@
         public function controller()
         {
             if (!empty($_FILES[$this->inputFileName]['name'])) {
-                if (
-                    is_array($_FILES[$this->inputFileName]['name']) &&
-                    $_FILES[$this->inputFileName]['error'][0] == 0
-                ) {
+                if ( is_array($_FILES[$this->inputFileName]['name']) ) {
                     return $this->handleMultipleUploads();
                 } else if ($_FILES[$this->inputFileName]['error'] == 0) {
                     return $this->handleUpload();
