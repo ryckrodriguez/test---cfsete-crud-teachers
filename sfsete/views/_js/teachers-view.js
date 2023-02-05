@@ -38,8 +38,8 @@ handlerTabBoxActive = (anchor) => {
 
 handlerModalAction = () => {
     btnAddTeacher.onclick = function() {
-        handleResetModal();
         handleShowModal(modalAddTeacher);
+        handleResetModal();
         document.getElementById("control_action_delete").classList.add("hidden-element");
     }
 
@@ -68,6 +68,39 @@ handleResetModal = () => {
             element.outerHTML = "";
         }
     });
+
+    const inputsRequiredFalse = document.querySelectorAll("#form_data_teacher [isValid='false']");
+    if(inputsRequiredFalse.length > 0) {
+        for(const element in inputsRequiredFalse){
+            try {
+                if(!inputsRequiredFalse[element].value){
+                    inputsRequiredFalse[element].setAttribute("isValid", false);
+                };
+                inputsRequiredFalse[element].style.border = "1px solid black";
+                const displayErrors = inputsRequiredFalse[element].parentElement.children[2];
+                displayErrors.innerText = "";
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+
+    const inputsRequiredTrue = document.querySelectorAll("#form_data_teacher [isValid='true']");
+    if(inputsRequiredTrue.length > 0) {
+        for(const element in inputsRequiredTrue){
+            try {
+                if(!inputsRequiredTrue[element].value){
+                    inputsRequiredTrue[element].setAttribute("isValid", false);
+                };
+                inputsRequiredTrue[element].style.border = "1px solid black";
+                const displayErrors = inputsRequiredTrue[element].parentElement.children[2];
+                displayErrors.innerText = "";
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+
     document.getElementById("form_action").value = "add";
     document.getElementById("form_ref").value = "";
 };
@@ -124,7 +157,7 @@ handlerAddNewQualification = (anchor) => {
 
             <div class="form-group col-md">
                 <label for="qualification_country${index}" class="required">País</label>
-                <input type="text" name="qualification_country[${index}]" id="qualification_country${index}" value="Brasil" oninput="handleValidateFormInput(this)" isValid="false">
+                <input type="text" name="qualification_country[${index}]" id="qualification_country${index}" value="Brasil" oninput="handleValidateFormInput(this)" isValid="true">
             </div>
 
             <div class="form-group col-md">

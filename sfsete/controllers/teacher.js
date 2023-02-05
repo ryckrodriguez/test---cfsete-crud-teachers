@@ -72,7 +72,7 @@ handleformDataTeacherSubmited = (event) => {
         handleHideModal(modalAddTeacher);
         messagePopup(msg);
     }).catch( error => {
-        messagePopup(`Atenção: ${error}`);
+        messagePopup(`${error}`);
     }).finally( () => {
         btns.forEach( element => {
             element.removeAttribute("disabled");

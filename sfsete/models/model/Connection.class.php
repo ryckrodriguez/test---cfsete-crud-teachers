@@ -10,6 +10,7 @@
                 $user = "root";
                 $pass = "SFSete2023!";
                 $connect = new PDO("mysql:host={$server};port={$port};dbname={$db}", $user, $pass);
+                // $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 return $connect;
             } catch (Exception $e) {
                 return "Falha na conexão";
@@ -50,6 +51,7 @@
             } catch(Exception $e) {
                 $response["error"] = true;
                 $response["msg"] = "Ocorreu um erro, por favor, entre em contato com o administrador";
+                // $response["msg"] = $e->getMessage();
             }
             return $response;
         }
@@ -104,7 +106,7 @@
                 $arrValues = [];
                 foreach ($data as $key => $value) {
                     $arrFields[] = $key;
-                    $arrValues[] = $value;
+                    $arrValues[] = strip_tags($value);
                 }
                 $fields = implode(" ,", $arrFields);
                 $values = implode(" ,", $arrValues);
@@ -137,7 +139,7 @@
                     $arrFields = [];
                     foreach ($dataValue as $key => $value) {
                         $arrFields[] = $key;
-                        $arrValues[$dataKey][] = $value;
+                        $arrValues[$dataKey][] = strip_tags($value);
                     }
                     $fields = implode(" ,", $arrFields);
                     $valuesAux[$dataKey] = "(".implode(" ,", $arrValues[$dataKey]).")";
@@ -169,7 +171,7 @@
                 $arrFields = [];
                 foreach ($data as $key => $value) {
                     if ($key!="id") {
-                        $arrFields[] = "{$key} = {$value}";
+                        $arrFields[] = "{$key} = " . strip_tags($value);
                     }
                 }
 

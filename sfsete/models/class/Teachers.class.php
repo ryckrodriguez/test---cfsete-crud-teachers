@@ -19,24 +19,34 @@ class Teachers {
         try {
             
             $query = "SELECT 
-                    id
-                    ,name
-                    ,birth_date
-                    ,rg_number
-                    ,cpf_number
-                    ,email_address
-                    ,phone
-                    ,gender
-                    ,address
-                    ,address_number
-                    ,address_district
-                    ,address_city
-                    ,address_state
-                    ,address_cep
-                    ,address_city_origin
-                FROM t_teachers 
+                    teachers.id
+                    ,teachers.name
+                    ,teachers.birth_date
+                    ,teachers.rg_number
+                    ,teachers.cpf_number
+                    ,teachers.email_address
+                    ,teachers.phone
+                    ,teachers.gender
+                    ,teachers.address
+                    ,teachers.address_number
+                    ,teachers.address_district
+                    ,teachers.address_city
+                    ,teachers.address_state
+                    ,teachers.address_cep
+                    ,teachers.address_city_origin
+                    ,GROUP_CONCAT(
+                        qualifications.name
+                        ORDER BY qualifications.id
+                        SEPARATOR ' | '
+                    ) AS qualifications
+                FROM t_teachers AS teachers
+                INNER JOIN t_qualifications AS qualifications
+                    ON qualifications.teacher_id = teachers.id
+                    AND qualifications.flg_active = 1
                 WHERE
-                    flg_active = 1";
+                    teachers.flg_active = 1
+                GROUP BY teachers.id
+                ORDER BY teachers.name";
             $result = Connection::search($query);
     
             if(!$result["error"]){
@@ -47,6 +57,7 @@ class Teachers {
     
                     $objTeachers->id = !empty($value->id) ? $value->id : "";
                     $objTeachers->name = !empty($value->name) ? $value->name : "--";
+                    $objTeachers->qualifications = !empty($value->qualifications) ? $value->qualifications : "--";
                     $objTeachers->birth_date = !empty($value->birth_date) ? $value->birth_date : "--";
                     $objTeachers->birth_date_br = !empty($value->birth_date) ? date("d/m/Y", strtotime($value->birth_date)) : "--";
                     $objTeachers->rg_number = !empty($value->rg_number) ? $value->rg_number : "--";
@@ -316,27 +327,35 @@ class Teachers {
 
     private static function getTeacher($id)
     {
-        $query = "SELECT
-                id
-                ,name
-                ,birth_date
-                ,rg_number
-                ,cpf_number
-                ,email_address
-                ,phone
-                ,gender
-                ,address
-                ,address_number
-                ,address_district
-                ,address_city
-                ,address_state
-                ,address_cep
-                ,address_city_origin
-            FROM
-                t_teachers 
+        $query = "SELECT 
+                teachers.id
+                ,teachers.name
+                ,teachers.birth_date
+                ,teachers.rg_number
+                ,teachers.cpf_number
+                ,teachers.email_address
+                ,teachers.phone
+                ,teachers.gender
+                ,teachers.address
+                ,teachers.address_number
+                ,teachers.address_district
+                ,teachers.address_city
+                ,teachers.address_state
+                ,teachers.address_cep
+                ,teachers.address_city_origin
+                ,GROUP_CONCAT(
+                    qualifications.name
+                    ORDER BY qualifications.id
+                    SEPARATOR ' | '
+                ) AS qualifications
+            FROM t_teachers AS teachers
+            INNER JOIN t_qualifications AS qualifications
+                ON qualifications.teacher_id = teachers.id
+                AND qualifications.flg_active = 1
             WHERE
-                flg_active = 1
-                AND id = {$id}";
+                teachers.flg_active = 1
+                AND teachers.id = {$id}
+            GROUP BY teachers.id";
         $result = Connection::search($query);
 
         if(!$result["error"]){
@@ -349,6 +368,7 @@ class Teachers {
                 $objTeachers->ref = $objTeachers->id;
                 $objTeachers->name = !empty($value->name) ? $value->name : "--";
                 $objTeachers->full_name = $objTeachers->name;
+                $objTeachers->qualifications = !empty($value->qualifications) ? $value->qualifications : "--";
                 $objTeachers->birth_date = !empty($value->birth_date) ? $value->birth_date : "--";
                 $objTeachers->birth_date_br = !empty($value->birth_date) ? date("d/m/Y", strtotime($value->birth_date)) : "--";
                 $objTeachers->rg_number = !empty($value->rg_number) ? $value->rg_number : "--";
