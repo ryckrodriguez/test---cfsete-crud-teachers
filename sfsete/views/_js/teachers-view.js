@@ -51,11 +51,11 @@ handlerModalAction = () => {
         }
     }
 
-    window.onclick = function(event) {
-        if (event.target == modalAddTeacher) {
-            handleHideModal(modalAddTeacher);
-        }
-    }
+    // window.onclick = function(event) {
+    //     if (event.target == modalAddTeacher) {
+    //         handleHideModal(modalAddTeacher);
+    //     }
+    // }
 }
 handlerModalAction();
 
@@ -76,8 +76,10 @@ handleResetModal = () => {
                 if(!inputsRequiredFalse[element].value){
                     inputsRequiredFalse[element].setAttribute("isValid", false);
                 };
+                const inputName = inputsRequiredFalse[element].getAttribute("name");
                 inputsRequiredFalse[element].style.border = "1px solid black";
-                const displayErrors = inputsRequiredFalse[element].parentElement.children[2];
+                const displayErrors = (inputName == "address_city_origin" || inputName == "address_city") ?
+                    inputsRequiredFalse[element].parentElement.children[3] : inputsRequiredFalse[element].parentElement.children[2];
                 displayErrors.innerText = "";
             } catch (error) {
                 console.log(error);
@@ -92,8 +94,10 @@ handleResetModal = () => {
                 if(!inputsRequiredTrue[element].value){
                     inputsRequiredTrue[element].setAttribute("isValid", false);
                 };
+                const inputName = inputsRequiredFalse[element].getAttribute("name");
                 inputsRequiredTrue[element].style.border = "1px solid black";
-                const displayErrors = inputsRequiredTrue[element].parentElement.children[2];
+                const displayErrors = (inputName == "address_city_origin" || inputName == "address_city") ?
+                    inputsRequiredFalse[element].parentElement.children[3] : inputsRequiredFalse[element].parentElement.children[2];
                 displayErrors.innerText = "";
             } catch (error) {
                 console.log(error);
@@ -119,6 +123,7 @@ handleFilterTeacherList = (input) => {
 handleValidateCEP = (input) => {
 }
 
+var qualificationLevelListOption = "";
 handlerAddNewQualification = (anchor) => {
     anchor.parentElement.outerHTML = "";
     const index = document.querySelectorAll("#form_data_teacher #tabs-box-3 fieldset .new-qualification-container").length;
@@ -135,11 +140,7 @@ handlerAddNewQualification = (anchor) => {
                 <label for="qualification_level${index}" class="required">Nível</label>
                 <select name="qualification_level[${index}]" id="qualification_level${index}" onchange="handleValidateFormInput(this)" isValid="false">
                     <option selected="selected" value="">Selecione uma opção...</option>
-                    <option value="Curso Técnico">Curso Técnico</option>
-                    <option value="Ensino Superior">Ensino Superior</option>
-                    <option value="Pós-graduação - Especialização/MBA">Pós-graduação - Especialização/MBA</option>
-                    <option value="Pós-graduação - Mestrado">Pós-graduação - Mestrado</option>
-                    <option value="Pós-graduação - Doutorado">Pós-graduação - Doutorado</option>
+                    ${qualificationLevelListOption}
                 </select>
             </div>
 
@@ -365,10 +366,10 @@ handleValidateFormInput = (input) => {
     try {
         input.setAttribute("isValid", true);
     
-        const inputName = input.getAttribute("name");
+        const inputName = (input.getAttribute("name")).split("[")[0];
         const inputValue = input.value;
         const label = input.parentElement.children[0].innerText;
-        const displayErrors = input.parentElement.children[2];
+        const displayErrors = (inputName == "address_city_origin" || inputName == "address_city") ? input.parentElement.children[3] : input.parentElement.children[2];
         const onlyNumber = inputValue.replace(/[^\d]+/g, '');
         let newValue = "";
     
@@ -507,6 +508,15 @@ handleValidateFormInput = (input) => {
                 input.value = inputValue;
                 break;
     
+            case "qualification_level":
+                if( !inputValue ) {
+                    input.setAttribute("isValid", false);
+                    displayErrors.innerText = "Selecione o nível do curso.";
+                }
+    
+                input.value = inputValue;
+                break;
+    
             default:
                 if(inputValue.length < 3) {
                     input.setAttribute("isValid", false);
@@ -540,3 +550,25 @@ handlerVerifyRequiredFiels = () => {
 
     return false;
 }
+
+handleSetFormDataList = ({levels, cities}) => {
+
+    const qualificationLevel = document.getElementById("qualification_level");
+    levels.forEach(element => {
+        const option = document.createElement("option");
+        option.value = element.id;
+        option.innerText = element.name;
+        qualificationLevel.append(option);
+        qualificationLevelListOption += option.outerHTML;
+    });
+
+    const address_city_origin = document.getElementById("list_address_city_origin");
+    const address_city = document.getElementById("list_address_city");
+    cities.forEach(element => {
+        const option = document.createElement("option");
+        option.setAttribute("ref", element.id);
+        option.value = element.name;
+        address_city.append(option.cloneNode(true));
+        address_city_origin.append(option.cloneNode(true));
+    });
+};

@@ -117,6 +117,7 @@
                 $response["error"] = true;
                 $response["title"] = "Erro";
                 $response["msg"] = "Nenhum valor inserido!";
+                $response["id"] = "";
                 if(!empty($result)) {
                     $response["error"] = false;
                     $response["title"] = "Sucesso";

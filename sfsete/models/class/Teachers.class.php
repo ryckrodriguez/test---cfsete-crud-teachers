@@ -30,19 +30,27 @@ class Teachers {
                     ,teachers.address
                     ,teachers.address_number
                     ,teachers.address_district
-                    ,teachers.address_city
+                    ,teachers.address_city_id
                     ,teachers.address_state
                     ,teachers.address_cep
-                    ,teachers.address_city_origin
+                    ,teachers.address_city_origin_id
                     ,GROUP_CONCAT(
                         qualifications.name
                         ORDER BY qualifications.id
                         SEPARATOR ' | '
                     ) AS qualifications
+                    ,city.name AS address_city
+                    ,city_origin.name AS address_city_origin
                 FROM t_teachers AS teachers
                 INNER JOIN t_qualifications AS qualifications
                     ON qualifications.teacher_id = teachers.id
                     AND qualifications.flg_active = 1
+                LEFT JOIN t_cities as city
+                    ON city.id = teachers.address_city_id
+                    AND city.flg_active = 1
+                LEFT JOIN t_cities as city_origin
+                    ON city_origin.id = teachers.address_city_origin_id
+                    AND city_origin.flg_active = 1
                 WHERE
                     teachers.flg_active = 1
                 GROUP BY teachers.id
@@ -68,9 +76,11 @@ class Teachers {
                     $objTeachers->address = !empty($value->address) ? $value->address : "--";
                     $objTeachers->address_number = !empty($value->address_number) ? $value->address_number : "--";
                     $objTeachers->address_district = !empty($value->address_district) ? $value->address_district : "--";
+                    $objTeachers->address_city_id = !empty($value->address_city_id) ? $value->address_city_id : "--";
                     $objTeachers->address_city = !empty($value->address_city) ? $value->address_city : "--";
                     $objTeachers->address_state = !empty($value->address_state) ? $value->address_state : "--";
                     $objTeachers->address_cep = !empty($value->address_cep) ? $value->address_cep : "--";
+                    $objTeachers->address_city_origin_id = !empty($value->address_city_origin_id) ? $value->address_city_origin_id : "--";
                     $objTeachers->address_city_origin = !empty($value->address_city_origin) ? $value->address_city_origin : "--";
     
                     $content[] = $objTeachers;
@@ -85,6 +95,25 @@ class Teachers {
         }
 
         return $response;
+    }
+
+    public function getFormDataInfo()
+    {
+        try {
+
+            $arrContent = [];
+            $arrContent["levels"] = Data::getLevels();
+            $arrContent["cities"] = Data::getCities();
+
+            $response["error"] = empty($arrContent);
+            $response["msg"] = $arrContent;
+        } catch (\Throwable $th) {
+            $response["error"] = true;
+            $response["msg"] = $th->getMessage();
+        }
+
+        return $response;
+    
     }
 
     public function getToEdit()
@@ -121,10 +150,10 @@ class Teachers {
                 ,"address" => $connection->quote($_POST["address"])
                 ,"address_number" => $connection->quote($_POST["address_number"])
                 ,"address_district" => $connection->quote($_POST["address_district"])
-                ,"address_city" => $connection->quote($_POST["address_city"])
+                ,"address_city_origin_id" => $connection->quote(is_numeric($_POST["address_city_origin"]) ? $_POST["address_city_origin"] : self::insertNewCity($_POST["address_city_origin"]))
+                ,"address_city_id" => $connection->quote(is_numeric($_POST["address_city"]) ? $_POST["address_city"] : self::insertNewCity($_POST["address_city"]))
                 ,"address_state" => $connection->quote($_POST["address_state"])
                 ,"address_cep" => $connection->quote($_POST["address_cep"])
-                ,"address_city_origin" => $connection->quote($_POST["address_city_origin"])
                 ,"flg_active" => 1
                 ,"created_at" => "NOW()"
             ];
@@ -143,7 +172,7 @@ class Teachers {
                     $data[] = [
                         "teacher_id" => $resultInsertTeacher["id"]
                         ,"name" => $connection->quote($_POST["qualification_name"][$key])
-                        ,"level" => $connection->quote($_POST["qualification_level"][$key])
+                        ,"level_id" => $connection->quote($_POST["qualification_level"][$key])
                         ,"institution_name" => $connection->quote($_POST["qualification_institution"][$key])
                         ,"country" => $connection->quote($_POST["qualification_country"][$key])
                         ,"state" => $connection->quote($_POST["qualification_state"][$key])
@@ -188,10 +217,10 @@ class Teachers {
                 ,"address" => $connection->quote($_POST["address"])
                 ,"address_number" => $connection->quote($_POST["address_number"])
                 ,"address_district" => $connection->quote($_POST["address_district"])
-                ,"address_city" => $connection->quote($_POST["address_city"])
                 ,"address_state" => $connection->quote($_POST["address_state"])
                 ,"address_cep" => $connection->quote($_POST["address_cep"])
-                ,"address_city_origin" => $connection->quote($_POST["address_city_origin"])
+                ,"address_city_origin_id" => $connection->quote(is_numeric($_POST["address_city_origin"]) ? $_POST["address_city_origin"] : self::insertNewCity($_POST["address_city_origin"]))
+                ,"address_city_id" => $connection->quote(is_numeric($_POST["address_city"]) ? $_POST["address_city"] : self::insertNewCity($_POST["address_city"]))
                 ,"flg_active" => 1
                 ,"created_at" => "NOW()"
             ];
@@ -218,7 +247,7 @@ class Teachers {
                         "id" => $connection->quote($_POST["qualification_ref"][$key])
                         ,"teacher_id" => $connection->quote($teacherID)
                         ,"name" => $connection->quote($_POST["qualification_name"][$key])
-                        ,"level" => $connection->quote($_POST["qualification_level"][$key])
+                        ,"level_id" => $connection->quote($_POST["qualification_level"][$key])
                         ,"institution_name" => $connection->quote($_POST["qualification_institution"][$key])
                         ,"country" => $connection->quote($_POST["qualification_country"][$key])
                         ,"state" => $connection->quote($_POST["qualification_state"][$key])
@@ -339,19 +368,27 @@ class Teachers {
                 ,teachers.address
                 ,teachers.address_number
                 ,teachers.address_district
-                ,teachers.address_city
+                ,teachers.address_city_id
                 ,teachers.address_state
                 ,teachers.address_cep
-                ,teachers.address_city_origin
+                ,teachers.address_city_origin_id
                 ,GROUP_CONCAT(
                     qualifications.name
                     ORDER BY qualifications.id
                     SEPARATOR ' | '
                 ) AS qualifications
+                ,city.name AS address_city
+                ,city_origin.name AS address_city_origin
             FROM t_teachers AS teachers
             INNER JOIN t_qualifications AS qualifications
                 ON qualifications.teacher_id = teachers.id
                 AND qualifications.flg_active = 1
+            LEFT JOIN t_cities as city
+                ON city.id = teachers.address_city_id
+                AND city.flg_active = 1
+            LEFT JOIN t_cities as city_origin
+                ON city_origin.id = teachers.address_city_origin_id
+                AND city_origin.flg_active = 1
             WHERE
                 teachers.flg_active = 1
                 AND teachers.id = {$id}
@@ -382,9 +419,11 @@ class Teachers {
                 $objTeachers->address = !empty($value->address) ? $value->address : "--";
                 $objTeachers->address_number = !empty($value->address_number) ? $value->address_number : "--";
                 $objTeachers->address_district = !empty($value->address_district) ? $value->address_district : "--";
+                $objTeachers->address_city_id = !empty($value->address_city_id) ? $value->address_city_id : "--";
                 $objTeachers->address_city = !empty($value->address_city) ? $value->address_city : "--";
                 $objTeachers->address_state = !empty($value->address_state) ? $value->address_state : "--";
                 $objTeachers->address_cep = !empty($value->address_cep) ? $value->address_cep : "--";
+                $objTeachers->address_city_origin_id = !empty($value->address_city_origin_id) ? $value->address_city_origin_id : "--";
                 $objTeachers->address_city_origin = !empty($value->address_city_origin) ? $value->address_city_origin : "--";
 
                 $content = $objTeachers;
@@ -400,7 +439,7 @@ class Teachers {
         $query = "SELECT
                 id
                 ,name
-                ,level
+                ,level_id
                 ,institution_name
                 ,country
                 ,state
@@ -427,7 +466,7 @@ class Teachers {
                 $objTeachers->name = !empty($value->name) ? $value->name : "";
                 $objTeachers->qualification_name = $objTeachers->name;
 
-                $objTeachers->level = !empty($value->level) ? $value->level : "";
+                $objTeachers->level = !empty($value->level_id) ? $value->level_id : "";
                 $objTeachers->qualification_level = $objTeachers->level;
 
                 $objTeachers->institution_name = !empty($value->institution_name) ? $value->institution_name : "";
@@ -457,6 +496,19 @@ class Teachers {
 
         $response = $content;
         return $response;
+    }
+
+    private static function insertNewCity($city)
+    {
+        $connection = Transaction::get();
+        $data = [
+            "name" => $connection->quote($city)
+            ,"flg_active" => 1
+            ,"created_at" => "NOW()"
+        ];
+        $result = Connection::insert_data("t_cities", $data);
+
+        return $result["id"];
     }
 
 }

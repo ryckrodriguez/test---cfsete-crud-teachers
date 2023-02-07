@@ -32,6 +32,43 @@ CREATE DATABASE if not exists db_md_sfsete;
 3. Execute os comandos abaixo para criar as tabelas;
 
 ```mysql
+CREATE TABLE t_cities (
+    id bigint not null auto_increment,
+    name varchar(100) not null,
+
+    flg_active bit default 1,
+    created_at datetime not null,
+    updated_at datetime null,
+    deleted_at datetime null,
+
+    primary key (id)
+);
+```
+
+```mysql
+CREATE TABLE t_levels (
+    id bigint not null auto_increment,
+    name varchar(100) not null,
+
+    flg_active bit default 1,
+    created_at datetime not null,
+    updated_at datetime null,
+    deleted_at datetime null,
+
+    primary key (id)
+);
+
+INSERT INTO t_levels 
+(name, created_at)
+VALUES
+('Curso Técnico', NOW()),
+('Ensino Superior', NOW()),
+('Pós-graduação - Especialização/MBA', NOW()),
+('Pós-graduação - Mestrado', NOW()),
+('Pós-graduação - Doutorado', NOW());
+```
+
+```mysql
 CREATE TABLE t_teachers (
     id bigint not null auto_increment,
     name varchar(100) not null,
@@ -56,6 +93,18 @@ CREATE TABLE t_teachers (
     deleted_at datetime null,
     primary key (id)
 );
+
+ALTER TABLE t_teachers
+MODIFY COLUMN address_city bigint not null,
+MODIFY COLUMN address_city_origin bigint not null,
+ADD CONSTRAINT fk_cities
+foreign key (address_city) references t_cities(id),
+ADD CONSTRAINT fk_cities_origin
+foreign key (address_city_origin) references t_cities(id);
+
+ALTER TABLE t_teachers
+CHANGE `address_city` `address_city_id` bigint NOT NULL AFTER `address_district`,
+CHANGE `address_city_origin` `address_city_origin_id` bigint NOT NULL AFTER `address_city_id`;
 ```
 
 ```mysql
@@ -82,6 +131,14 @@ CREATE TABLE t_qualifications (
 
     primary key (id)
 );
+
+ALTER TABLE t_qualifications
+MODIFY COLUMN level bigint not null,
+ADD CONSTRAINT fk_levels
+foreign key (level) references t_levels(id);
+
+ALTER TABLE t_qualifications
+CHANGE `level` `level_id` bigint NOT NULL AFTER `name`;
 ```
 
 ---

@@ -18,10 +18,31 @@ document.addEventListener("DOMContentLoaded", event => {
         document.getElementById("without-data").classList.remove("hidden-element");
     }).finally( () => {
         document.getElementById("loading-teacher-grid").classList.add("hidden-element");
+        handleGetFormDataList();
     });
 });
 
 const formDataTeacher = document.getElementById("form_data_teacher");
+
+handleGetFormDataList = () => {
+
+    const body = new FormData();
+    body.append("action", "getFormDataInfo");
+    fetch("/operations/teachers/", {
+        method: "POST",
+        body: body
+    })
+    .then(response => response.json())
+    .then( ({error, msg}) => {
+
+        if(error){
+            throw new Error(msg);
+        }
+
+        handleSetFormDataList(msg);
+    }).catch( error => {
+    });
+}
 
 handleformDataTeacherSubmited = (event) => {
     event.preventDefault();
@@ -53,6 +74,19 @@ handleformDataTeacherSubmited = (event) => {
     });
 
     const data = new FormData(formDataTeacher);
+    var address_city =  document.getElementById("address_city").value;
+    var address_city_origin =  document.getElementById("address_city_origin").value;
+
+    address_city = address_city.split(" ").reduce( (prev, curr) => prev += `${curr[0].toUpperCase()}${curr.slice(1).toLowerCase()} `, "" ).trim();
+    address_city_origin = address_city_origin.split(" ").reduce( (prev, curr) => prev += `${curr[0].toUpperCase()}${curr.slice(1).toLowerCase()} `, "" ).trim();
+
+    address_city = document.querySelector(`#list_address_city option[value="${address_city}"]`)?.value ?
+        document.querySelector(`#list_address_city option[value="${address_city}"]`).getAttribute("ref") : address_city;
+    address_city_origin = document.querySelector(`#list_address_city_origin option[value="${address_city_origin}"]`)?.value ?
+        document.querySelector(`#list_address_city_origin option[value="${address_city_origin}"]`).getAttribute("ref") : address_city_origin;
+
+    data.set("address_city", address_city);
+    data.set("address_city_origin", address_city_origin);
     fetch("/operations/teachers/", {
         method: "POST",
         body: data

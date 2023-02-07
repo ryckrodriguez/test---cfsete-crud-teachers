@@ -222,7 +222,10 @@
     
                                         <div class="form-group col-md">
                                             <label for="address_city_origin" class="required">Cidade de nascimento</label>
-                                            <input type="text" name="address_city_origin" id="address_city_origin" oninput="handleValidateFormInput(this)" isValid="false">
+                                            <input list="list_address_city_origin" name="address_city_origin" id="address_city_origin" 
+                                                oninput="handleValidateFormInput(this)" isValid="false">
+                                            <datalist id="list_address_city_origin">
+                                            </datalist>
                                             <span class="display-errors"></span>
                                         </div>
 
@@ -246,7 +249,10 @@
     
                                         <div class="form-group col-sm">
                                             <label for="address_city" class="required">Cidade</label>
-                                            <input type="text" name="address_city" id="address_city" oninput="handleValidateFormInput(this)" isValid="false">
+                                            <input list="list_address_city" type="text" name="address_city" id="address_city"
+                                                oninput="handleValidateFormInput(this)" isValid="false">
+                                            <datalist id="list_address_city">
+                                            </datalist>
                                             <span class="display-errors"></span>
                                         </div>
     
@@ -279,11 +285,6 @@
                                                 <label for="qualification_level" class="required">Nível</label>
                                                 <select name="qualification_level[0]" id="qualification_level" onchange="handleValidateFormInput(this)" isValid="false">
                                                     <option selected="selected" value="">Selecione uma opção...</option>
-                                                    <option value="Curso Técnico">Curso Técnico</option>
-                                                    <option value="Ensino Superior">Ensino Superior</option>
-                                                    <option value="Pós-graduação - Especialização/MBA">Pós-graduação - Especialização/MBA</option>
-                                                    <option value="Pós-graduação - Mestrado">Pós-graduação - Mestrado</option>
-                                                    <option value="Pós-graduação - Doutorado">Pós-graduação - Doutorado</option>
                                                 </select>
                                                 <span class="display-errors"></span>
                                             </div>
