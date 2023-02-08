@@ -378,7 +378,10 @@ handleValidateFormInput = (input) => {
         switch (inputName) {
             case "full_name":
                 const fullNameSplit = inputValue.split(" ");
-                if(fullNameSplit.length <= 1 || fullNameSplit[1].length < 3){
+                if (inputValue.length >= 100) {
+                    input.value = inputValue.toString().substr(0,99);
+                    displayErrors.innerText = "Limite de 100 caracteres";
+                } else if(fullNameSplit.length <= 1 || fullNameSplit[1].length < 3){
                     input.setAttribute("isValid", false);
                     displayErrors.innerText = "Digite o nome completo";
                 }
@@ -447,7 +450,10 @@ handleValidateFormInput = (input) => {
     
             case "email_address": 
                 const regex = /\S+@\S+\.\S+/;
-                if(!regex.test(inputValue)){
+                if (inputValue.length >= 100) {
+                    input.value = inputValue.toString().substr(0,99);
+                    displayErrors.innerText = "Limite de 100 caracteres";
+                } else if(!regex.test(inputValue)){
                     input.setAttribute("isValid", false);
                     displayErrors.innerText = "Digite um e-mail válido";
                 };
@@ -491,12 +497,14 @@ handleValidateFormInput = (input) => {
                 break;
     
             case "address_number":
-                if(!(inputValue.length > 0) || !(Number(onlyNumber) > 0)) {
+                if (inputValue.length > 6) {
+                    input.value = inputValue.toString().substr(0,6);
+                    displayErrors.innerText = "Limite de 6 caracteres";
+                } else  if(!(inputValue.length > 0) || !(Number(onlyNumber) > 0)) {
                     input.setAttribute("isValid", false);
                     displayErrors.innerText = "Digite um número residencial válido";
                 }
     
-                input.value = inputValue;
                 break;
     
             case "qualification_concluded":
