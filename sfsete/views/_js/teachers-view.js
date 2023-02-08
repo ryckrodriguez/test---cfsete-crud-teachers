@@ -81,9 +81,7 @@ handleResetModal = () => {
                 const displayErrors = (inputName == "address_city_origin" || inputName == "address_city") ?
                     inputsRequiredFalse[element].parentElement.children[3] : inputsRequiredFalse[element].parentElement.children[2];
                 displayErrors.innerText = "";
-            } catch (error) {
-                console.log(error);
-            }
+            } catch (error) {}
         }
     }
 
@@ -99,9 +97,7 @@ handleResetModal = () => {
                 const displayErrors = (inputName == "address_city_origin" || inputName == "address_city") ?
                     inputsRequiredFalse[element].parentElement.children[3] : inputsRequiredFalse[element].parentElement.children[2];
                 displayErrors.innerText = "";
-            } catch (error) {
-                console.log(error);
-            }
+            } catch (error) {}
         }
     }
 
@@ -113,8 +109,9 @@ handleHideModal = (modal) => {
     modal.style.display = "none";
 }
 
-handleShowModal = (modal) => {
+handleShowModal = async (modal) => {
     modal.style.display = "block";
+    await handleGetFormDataList();
 }
 
 handleFilterTeacherList = (input) => {
@@ -560,8 +557,10 @@ handlerVerifyRequiredFiels = () => {
 }
 
 handleSetFormDataList = ({levels, cities}) => {
+    qualificationLevelListOption = "";
 
     const qualificationLevel = document.getElementById("qualification_level");
+    qualificationLevel.innerHTML = `<option selected="selected" value="">Selecione uma opção...</option>`;
     levels.forEach(element => {
         const option = document.createElement("option");
         option.value = element.id;
@@ -572,6 +571,8 @@ handleSetFormDataList = ({levels, cities}) => {
 
     const address_city_origin = document.getElementById("list_address_city_origin");
     const address_city = document.getElementById("list_address_city");
+    address_city_origin.innerHTML = "";
+    address_city.innerHTML = "";
     cities.forEach(element => {
         const option = document.createElement("option");
         option.setAttribute("ref", element.id);

@@ -43,6 +43,16 @@ CREATE TABLE t_cities (
 
     primary key (id)
 );
+
+INSERT INTO t_cities
+(name, created_at)
+VALUES
+('Jandira', NOW()),
+('Osasco', NOW()),
+('Itapevi', NOW()),
+('Barueri', NOW()),
+('São Paulo', NOW()),
+('Cotia', NOW());
 ```
 
 ```mysql

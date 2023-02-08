@@ -18,28 +18,27 @@ document.addEventListener("DOMContentLoaded", event => {
         document.getElementById("without-data").classList.remove("hidden-element");
     }).finally( () => {
         document.getElementById("loading-teacher-grid").classList.add("hidden-element");
-        handleGetFormDataList();
     });
 });
 
 const formDataTeacher = document.getElementById("form_data_teacher");
 
-handleGetFormDataList = () => {
+handleGetFormDataList = async () => {
 
     const body = new FormData();
     body.append("action", "getFormDataInfo");
-    fetch("/operations/teachers/", {
+    await fetch("/operations/teachers/", {
         method: "POST",
         body: body
     })
     .then(response => response.json())
-    .then( ({error, msg}) => {
+    .then( async ({error, msg}) => {
 
         if(error){
             throw new Error(msg);
         }
 
-        handleSetFormDataList(msg);
+        await handleSetFormDataList(msg);
     }).catch( error => {
     });
 }
@@ -132,14 +131,14 @@ handleGetToEdit = (rowData) => {
         body: body
     })
     .then(response => response.json())
-    .then( ({error, msg}) => {
+    .then( async ({error, msg}) => {
 
         if(error){
             throw new Error(msg);
         }
 
         handleResetModal();
-        handleShowModal(modalAddTeacher);
+        await handleShowModal(modalAddTeacher);
         handlerPutValuesFields(msg);
         document.getElementById("form_ref").value = ref;
         document.getElementById("form_action").value = "edit";
